@@ -38,6 +38,8 @@ def add_log_duration(df):
     df['log_duration'] = df['duration'].map(lambda x : math.log(max(1,x)))
 def add_log_fare(df):
     df['log_fare'] = df['fare'].map(lambda x : math.log(max(1,x)))
+def add_log_predicted_fare(df):
+    df['log_predicted_fare'] = df['predicted_fare'].map(lambda x : math.log(max(1,x)))
 def add_log_distance(df):
     df['log_distance'] = df['distance'].map(lambda x : math.log(max(0.0000001,x)))
 def add_meter_reading_fare_capped(df):
@@ -63,6 +65,7 @@ def load_train(name):
     process_label_if_available(df)
     add_distance(df)
     add_log_fare(df)
+    add_log_predicted_fare(df)
     add_log_duration(df)
     add_log_distance(df)
     add_meter_reading_fare_capped(df)
@@ -71,7 +74,7 @@ def load_train(name):
     add_color(df)
     return df
 
-input_columns = ['fare','log_fare','meter_waiting_fare_capped','distance_multiplied','duration','additional_fare','log_duration','time']
+input_columns = ['fare','log_fare','predicted_fare','log_predicted_fare','meter_waiting_fare_capped','distance_multiplied','duration','additional_fare','log_duration','time']
 output_columns = ['label']
 def select_input_columns(df):
     return df[input_columns]
@@ -98,8 +101,8 @@ def train_save(df,model,epochs,name="", new_optimizer = False):
     if name != "" :model.save("./models/"+name)
 def build_model():
     model = Sequential()
-    model.add(Dense(5, activation='relu', input_shape=(len(input_columns),)))
-    model.add(Dense(2, activation='relu'))
+    model.add(Dense(6, activation='relu', input_shape=(len(input_columns),)))
+    model.add(Dense(4, activation='relu'))
     model.add(Dense(len(output_columns), activation='sigmoid'))
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',
@@ -214,12 +217,13 @@ def cluster_test(df,cluster_id,scaler_fit = None):
     optimal_split_values = predict_groups_and_calc_optimal_split(cluster_id,df,scaler_fit)
     result_dfs = predict_n_classify_groups(cluster_id, df,optimal_split_values,scaler_fit)
     report = pd_vstack(result_dfs)
+    xc(report)
     matrices = calc_matrices(report)
     return report,matrices
 
 def auto_cluster_train(cluster_id,
                        df,
-                       general_model_name = "",
+                       base_model_name ="",
                        no_base_model = False,
                        base_model_epochs = 10,
                        cluster_model_epochs = 20,
@@ -234,20 +238,20 @@ def auto_cluster_train(cluster_id,
     if group_index is None:
         if not (skip_base_model_training or no_base_model):
             model = build_model()
-            train_save(df, model, base_model_epochs, general_model_name)
+            train_save(df, model, base_model_epochs, base_model_name)
         for i in range(len(fare_groups_info)):
             print('Starting Model ' + str(i))
             Popen("python greed.py " + str(i), creationflags=CREATE_NEW_CONSOLE)
             time.sleep(sleep_time)
     else:
         groups = get_fare_groups(df)
-        train_cluster(general_model_name, groups, cluster_model_epochs, cluster_id, group_number=group_index,
-                      new_optimizer=new_optimizer,no_base_model = no_base_model)
+        train_cluster(base_model_name, groups, cluster_model_epochs, cluster_id, group_number=group_index,
+                      new_optimizer=new_optimizer, no_base_model = no_base_model)
 
     input("Press Enter to continue...")
 #-----------------------------------------------------------------------------------------------------------------------
 
-df = load_train_train()
+df = load_train_train().reset_index(drop=True)
 print(42)
-#auto_cluster_train('friedrichengels9',cluster_model_epochs=10000,skip_base_model_training=False,df=df,no_base_model=True,sleep_time=40)
-print(cluster_test(load_train_test(),"friedrichengels9",load_train_train()))
+#auto_cluster_train('hj',base_model_name='hjm',cluster_model_epochs=2000,base_model_epochs=1200,skip_base_model_training=False,df=df,no_base_model=False,sleep_time=40,new_optimizer=False)
+print(cluster_test(load_train_test().reset_index(drop=True),"hj",load_train_train()))

@@ -318,7 +318,28 @@ def all(regressor_model = None, classifier_model = None):
     #return test_df
 
 
-all(RandomForestRegressor(n_estimators=40, random_state=42), RandomForestClassifier(n_estimators=130))
+#all(RandomForestRegressor(n_estimators=40, random_state=42), RandomForestClassifier(n_estimators=130))
+
+
+regressor_model = RandomForestRegressor(n_estimators=40, random_state=42)
+train_df = load_train()
+test_df = load_test()
+ops_df = load_ops()
+ops_df_stripped_false = ops_df[ops_df['label'] > .5]
+set_mode_regress()#set mode
+#regressor_model = RandomForestRegressor(n_estimators=20, random_state=0)
+normalizer = train_n_get_normalizer(ops_df_stripped_false, regressor_model) # train regress on train
+
+predict_n_build_column(regressor_model, train_df, normalizer, output_column_name='predicted_fare') # predict regress on train
+predict_n_build_column(regressor_model, test_df, normalizer, output_column_name='predicted_fare') # predict regress on test
+predict_n_build_column(regressor_model, ops_df, normalizer, output_column_name='predicted_fare') # predict regress on test
+add_predicted_fare_error_perc(train_df)
+add_predicted_fare_error_perc(test_df)
+add_predicted_fare_error_perc(ops_df)
+add_predicted_fare_error_diff(train_df)
+add_predicted_fare_error_diff(test_df)
+add_predicted_fare_error_diff(ops_df)
+
 
 #
 # test_df['predicted_label'] = test_df['predicted_label'] *1
