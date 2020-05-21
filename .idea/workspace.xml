@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3cea3e45-2292-417c-aeea-6ef1f1594207" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/normalizermin_max" beforeDir="false" afterPath="$PROJECT_DIR$/normalizermin_max" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pride.py" beforeDir="false" afterPath="$PROJECT_DIR$/pride.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -201,7 +200,7 @@
       <workItem from="1589967134853" duration="9635000" />
       <workItem from="1589959070136" duration="11947000" />
       <workItem from="1590006753750" duration="5900000" />
-      <workItem from="1590038940747" duration="613000" />
+      <workItem from="1590038940747" duration="1409000" />
     </task>
     <task id="LOCAL-00001" summary=".975">
       <created>1590012628406</created>
@@ -250,10 +249,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="1066" y="468" key="#xdebugger.evaluate/0.0.1920.1050@0.0.1920.1050" timestamp="1590006950248" />
-    <state x="598" y="123" key="CommitChangelistDialog2" timestamp="1590012627912">
+    <state x="598" y="123" key="CommitChangelistDialog2" timestamp="1590040385280">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="598" y="123" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1590012627912" />
+    <state x="598" y="123" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1590040385280" />
     <state width="1877" height="352" key="GridCell.Tab.0.bottom" timestamp="1590012693819">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

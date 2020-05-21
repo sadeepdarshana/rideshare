@@ -318,7 +318,7 @@ def all(regressor_model = None, classifier_model = None):
     #return test_df
 
 
-all(RandomForestRegressor(n_estimators=40, random_state=0), RandomForestClassifier(n_estimators=130))
+all(RandomForestRegressor(n_estimators=40, random_state=42), RandomForestClassifier(n_estimators=130))
 
 #
 # test_df['predicted_label'] = test_df['predicted_label'] *1
