@@ -71,11 +71,7 @@ def load_train(name):
     add_color(df)
     return df
 
-input_columns = ['fare','log_fare','meter_waiting_fare_capped','distance_multiplied','duration',
-                'pick_lat',
-                'pick_lon',
-                'drop_lat',
-                'drop_lon','additional_fare','log_duration','time']
+input_columns = ['fare','log_fare','meter_waiting_fare_capped','distance_multiplied','duration','additional_fare','log_duration','time']
 output_columns = ['label']
 def select_input_columns(df):
     return df[input_columns]
