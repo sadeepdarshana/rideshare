@@ -82,8 +82,8 @@ input_columns_classify = [
                  'additional_fare',
                #  'log_duration',
                  'time',
-               #  'predicted_fare_error_perc',
-              #   'predicted_fare_error_diff'
+                 'predicted_fare_error_perc',
+                 'predicted_fare_error_diff'
 ]
 
 output_columns_classify = [
@@ -139,7 +139,7 @@ def predict_label_based_on_predicted_fare(df,cut_off_lb,cut_off_ub):
 
 # Utils ----------------------------------------------------------------------------------------------------------------
 
-def split_n_save(name):
+def split_n_save(name='original_train.csv'):
     df = pd.read_csv('./data/'+name)
     msk = np.random.rand(len(df)) < .2
 
@@ -241,7 +241,19 @@ def build_normalizer(df, name="", normalizer_type ='min_max'):
 def transform_with(df, norm_model):
     if isinstance(norm_model, str):normalizer = joblib.load('./normalizer' + norm_model)
     else: normalizer = norm_model
-    return pd.DataFrame(normalizer.transform(df), columns=df.columns)
+    normed =  pd.DataFrame(normalizer.transform(df), columns=df.columns)
+
+    ks = 'predicted_fare_error_perc','predicted_fare_error_diff'
+    for k in ks:
+        if k in df.columns:
+            col = df[k]
+            maxv = max(col.max(),-1*col.min(),1)
+            newcol = col/maxv
+            normed[k] = newcol
+
+    return normed
+
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -312,6 +324,7 @@ def all(regressor_model = None, classifier_model = None):
 
     attach_classes(test_df)
     m=calc_matrices(test_df)
+    return test_df,m
     print(m)
 
     globals().update(locals())
@@ -319,26 +332,26 @@ def all(regressor_model = None, classifier_model = None):
 
 
 #all(RandomForestRegressor(n_estimators=40, random_state=42), RandomForestClassifier(n_estimators=130))
+all(RandomForestRegressor(n_estimators=100), RandomForestClassifier(n_estimators=100))
+if 0:
+    regressor_model = RandomForestRegressor(n_estimators=40, random_state=42)
+    train_df = load_train()
+    test_df = load_test()
+    ops_df = load_ops()
+    ops_df_stripped_false = ops_df[ops_df['label'] > .5]
+    set_mode_regress()#set mode
+    #regressor_model = RandomForestRegressor(n_estimators=20, random_state=0)
+    normalizer = train_n_get_normalizer(ops_df_stripped_false, regressor_model) # train regress on train
 
-
-regressor_model = RandomForestRegressor(n_estimators=40, random_state=42)
-train_df = load_train()
-test_df = load_test()
-ops_df = load_ops()
-ops_df_stripped_false = ops_df[ops_df['label'] > .5]
-set_mode_regress()#set mode
-#regressor_model = RandomForestRegressor(n_estimators=20, random_state=0)
-normalizer = train_n_get_normalizer(ops_df_stripped_false, regressor_model) # train regress on train
-
-predict_n_build_column(regressor_model, train_df, normalizer, output_column_name='predicted_fare') # predict regress on train
-predict_n_build_column(regressor_model, test_df, normalizer, output_column_name='predicted_fare') # predict regress on test
-predict_n_build_column(regressor_model, ops_df, normalizer, output_column_name='predicted_fare') # predict regress on test
-add_predicted_fare_error_perc(train_df)
-add_predicted_fare_error_perc(test_df)
-add_predicted_fare_error_perc(ops_df)
-add_predicted_fare_error_diff(train_df)
-add_predicted_fare_error_diff(test_df)
-add_predicted_fare_error_diff(ops_df)
+    predict_n_build_column(regressor_model, train_df, normalizer, output_column_name='predicted_fare') # predict regress on train
+    predict_n_build_column(regressor_model, test_df, normalizer, output_column_name='predicted_fare') # predict regress on test
+    predict_n_build_column(regressor_model, ops_df, normalizer, output_column_name='predicted_fare') # predict regress on test
+    add_predicted_fare_error_perc(train_df)
+    add_predicted_fare_error_perc(test_df)
+    add_predicted_fare_error_perc(ops_df)
+    add_predicted_fare_error_diff(train_df)
+    add_predicted_fare_error_diff(test_df)
+    add_predicted_fare_error_diff(ops_df)
 
 
 #
