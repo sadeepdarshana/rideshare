@@ -38,20 +38,20 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/data" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="python.debugger.dataview.autoresize" value="false" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Python" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Sadeep\Desktop\ml\data" />
-      <recent name="C:\Users\Sadeep\Desktop\ml\tmp" />
-      <recent name="C:\Users\Sadeep\Desktop\ml" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Sadeep\Desktop\ml\tmp" />
       <recent name="C:\Users\Sadeep\Desktop\ml\data" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Sadeep\Desktop\ml" />
+      <recent name="C:\Users\Sadeep\Desktop\ml\data" />
+      <recent name="C:\Users\Sadeep\Desktop\ml\tmp" />
     </key>
   </component>
   <component name="RunManager" selected="Python.pride">
@@ -147,6 +147,9 @@
       <module name="ml" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -206,7 +209,12 @@
       <workItem from="1590054792632" duration="59000" />
       <workItem from="1590054868544" duration="6367000" />
       <workItem from="1590124028777" duration="3821000" />
-      <workItem from="1590144259347" duration="1298000" />
+      <workItem from="1590144259347" duration="7625000" />
+      <workItem from="1590152093702" duration="1563000" />
+      <workItem from="1590154679978" duration="61000" />
+      <workItem from="1590250844326" duration="260000" />
+      <workItem from="1590329936063" duration="336000" />
+      <workItem from="1590332635735" duration="637000" />
     </task>
     <task id="LOCAL-00001" summary=".975">
       <created>1590012628406</created>
@@ -259,38 +267,38 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="598" y="123" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1590040385280" />
-    <state width="1877" height="352" key="GridCell.Tab.0.bottom" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.0.bottom" timestamp="1590143960825">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
-    <state width="1877" height="352" key="GridCell.Tab.0.center" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1590143960825" />
+    <state width="1877" height="352" key="GridCell.Tab.0.center" timestamp="1590143960825">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
-    <state width="1877" height="352" key="GridCell.Tab.0.left" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1590143960825" />
+    <state width="1877" height="352" key="GridCell.Tab.0.left" timestamp="1590143960825">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
-    <state width="1877" height="352" key="GridCell.Tab.0.right" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1590143960825" />
+    <state width="1877" height="352" key="GridCell.Tab.0.right" timestamp="1590143960825">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
-    <state width="1877" height="352" key="GridCell.Tab.1.bottom" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1590143960825" />
+    <state width="1877" height="352" key="GridCell.Tab.1.bottom" timestamp="1590143970259">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
-    <state width="1877" height="352" key="GridCell.Tab.1.center" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1590143970259" />
+    <state width="1877" height="352" key="GridCell.Tab.1.center" timestamp="1590143970259">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
-    <state width="1877" height="352" key="GridCell.Tab.1.left" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1590143970259" />
+    <state width="1877" height="352" key="GridCell.Tab.1.left" timestamp="1590143970259">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
-    <state width="1877" height="352" key="GridCell.Tab.1.right" timestamp="1590145518398">
+    <state width="1877" height="352" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1590143970259" />
+    <state width="1877" height="352" key="GridCell.Tab.1.right" timestamp="1590143970259">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1877" height="352" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1590145518398" />
+    <state width="1877" height="352" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1590143970259" />
     <state x="619" y="128" key="SettingsEditor" timestamp="1589958207578">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -303,33 +311,17 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="92" y="92" width="1736" height="866" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1590051363598" />
-    <state x="668" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1590144265492">
+    <state x="668" y="352" key="com.intellij.ide.util.TipDialog" timestamp="1590154680889">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="668" y="352" key="com.intellij.ide.util.TipDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1590144265492" />
+    <state x="668" y="352" key="com.intellij.ide.util.TipDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1590154680889" />
     <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1590011725408">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1590011725408" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/pride.py</url>
-          <line>317</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/pride.py</url>
-          <line>253</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ml$pride.coverage" NAME="pride Coverage Results" MODIFIED="1590145362890" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml$pride.coverage" NAME="pride Coverage Results" MODIFIED="1590151513113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ml$main.coverage" NAME="main Coverage Results" MODIFIED="1589656728572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ml$greed.coverage" NAME="greed Coverage Results" MODIFIED="1590057681098" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
