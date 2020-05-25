@@ -82,8 +82,8 @@ input_columns_classify = [
                  'additional_fare',
                #  'log_duration',
                  'time',
-                 'predicted_fare_error_perc',
-                 'predicted_fare_error_diff'
+                # 'predicted_fare_error_perc',
+               #  'predicted_fare_error_diff'
 ]
 
 output_columns_classify = [
@@ -358,7 +358,7 @@ def all(regressor_model = None, classifier_model = None,m1=-1,M1=300000000,m2=-1
 
 
 #all(RandomForestRegressor(n_estimators=40, random_state=42), RandomForestClassifier(n_estimators=130))
-all(RandomForestRegressor(n_estimators=100), RandomForestClassifier(n_estimators=100),no_test=True)
+all(RandomForestRegressor(n_estimators=100), RandomForestClassifier(n_estimators=100))
 if 0:
     regressor_model = RandomForestRegressor(n_estimators=40, random_state=42)
     train_df = load_train()
