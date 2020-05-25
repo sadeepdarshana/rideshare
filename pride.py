@@ -3,6 +3,7 @@ import time
 from subprocess import Popen
 
 import pandas as pd
+from catboost import CatBoostClassifier, CatBoostRegressor
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from dateutil import parser
@@ -109,7 +110,10 @@ def get_train_model_inputs_output(df_with_features_n_label):
 
 def train_n_get_normalizer(df_with_features_n_label, model):
     sci_model_in, sci_model_out, normalizer = get_train_model_inputs_output(df_with_features_n_label)
-    model.fit(sci_model_in, sci_model_out)
+    if input_columns == input_columns_regress:
+        model.fit(sci_model_in, sci_model_out)
+    else:
+        model.fit(sci_model_in, sci_model_out.astype(np.int))  #classify
     return normalizer
 
 
@@ -331,7 +335,7 @@ def all(regressor_model = None, classifier_model = None,m1=-1,M1=300000000,m2=-1
     ops_df_stripped_false = ops_df[ops_df['label'] > .5]
     set_mode_regress()#set mode
     #regressor_model = RandomForestRegressor(n_estimators=20, random_state=0)
-    normalizer = train_n_get_normalizer(ops_df_stripped_false, regressor_model) # train regress on train
+    normalizer = train_n_get_normalizer(pd_vstack([train_df,test_df]), regressor_model) # train regress on train
     predict_n_build_column(regressor_model, train_df, normalizer, output_column_name='predicted_fare') # predict regress on train
     predict_n_build_column(regressor_model, test_df, normalizer, output_column_name='predicted_fare') # predict regress on test
     add_predicted_fare_error_perc(train_df)
@@ -356,9 +360,15 @@ def all(regressor_model = None, classifier_model = None,m1=-1,M1=300000000,m2=-1
     m=calc_matrices(test_df)
     return test_df,m
 
+def splitrun():
+    split_n_save(.79, .2)
+    g=all(CatBoostRegressor(iterations=10000), CatBoostClassifier(iterations=10000,custom_metric=['F1']))
+    print(g[1])
+
+splitrun()
 
 #all(RandomForestRegressor(n_estimators=40, random_state=42), RandomForestClassifier(n_estimators=130))
-all(RandomForestRegressor(n_estimators=100), RandomForestClassifier(n_estimators=100))
+#all(RandomForestRegressor(n_estimators=100), RandomForestClassifier(n_estimators=100))
 if 0:
     regressor_model = RandomForestRegressor(n_estimators=40, random_state=42)
     train_df = load_train()
