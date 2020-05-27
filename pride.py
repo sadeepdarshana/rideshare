@@ -42,6 +42,7 @@ classifiers = [
 
 input_columns = None
 output_columns = None
+no_norm = True
 
 
 input_columns_regress = [
@@ -58,7 +59,7 @@ input_columns_regress = [
     'drop_lon',
     'additional_fare',
     #  'log_duration',
-    'time',
+    #'time',
     #  'predicted_fare_error_perc',
     #   'predicted_fare_error_diff'
 ]
@@ -82,7 +83,7 @@ input_columns_classify = [
                  'drop_lon',
                  'additional_fare',
                #  'log_duration',
-                 'time',
+              #   'time',
                 # 'predicted_fare_error_perc',
                #  'predicted_fare_error_diff'
 ]
@@ -109,11 +110,17 @@ def get_train_model_inputs_output(df_with_features_n_label):
     return sci_model_in,sci_model_out,normalizer
 
 def train_n_get_normalizer(df_with_features_n_label, model):
-    sci_model_in, sci_model_out, normalizer = get_train_model_inputs_output(df_with_features_n_label)
-    if input_columns == input_columns_regress:
-        model.fit(sci_model_in, sci_model_out)
+    sci_model_in, sci_model_out, normalizer = get_train_model_inputs_output(get_shuffled_df(df_with_features_n_label))
+
+
+    basernd = np.random.rand(len(sci_model_in))
+    train_mask = basernd < .9
+
+    if input_columns_regress == input_columns:
+        model.fit(sci_model_in[train_mask], sci_model_out[train_mask], eval_set=(sci_model_in[~train_mask], sci_model_out[~train_mask]),use_best_model=True,verbose=True)
     else:
-        model.fit(sci_model_in, sci_model_out.astype(np.int))  #classify
+        model.fit(sci_model_in[train_mask], sci_model_out[train_mask],eval_set=(sci_model_in[~train_mask], sci_model_out[~train_mask]), use_best_model=True, verbose=True)
+
     return normalizer
 
 
@@ -177,6 +184,7 @@ def pd_vstack(dfs):
         if big_list is None: big_list = i
         else:big_list = big_list.append(i, ignore_index=True)
     return big_list
+
 def xc(df):
     fname = str(int(time.time() * 1000))
     df.to_csv("./tmp/"+fname+".csv")
@@ -248,7 +256,7 @@ def transform_with(df, norm_model):
     if isinstance(norm_model, str):normalizer = joblib.load('./normalizer' + norm_model)
     else: normalizer = norm_model
     normed =  pd.DataFrame(normalizer.transform(df), columns=df.columns)
-
+    if no_norm:return df
     ks = 'predicted_fare_error_perc','predicted_fare_error_diff'
 
     for k in ks:
@@ -361,8 +369,8 @@ def all(regressor_model = None, classifier_model = None,m1=-1,M1=300000000,m2=-1
     return test_df,m
 
 def splitrun():
-    split_n_save(.79, .2)
-    g=all(CatBoostRegressor(iterations=10000), CatBoostClassifier(iterations=10000,custom_metric=['F1']))
+    split_n_save(.99, .01)
+    g=all(CatBoostRegressor(iterations=3000), CatBoostClassifier(iterations=10000,eval_metric='F1'),m1=-1,M1=26444444404,m2=-1,M2=233333333360)
     print(g[1])
 
 splitrun()
