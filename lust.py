@@ -47,9 +47,12 @@ def get_processed_df(name,shuffle=True):
     df.reset_index(drop=True, inplace=True)
     return df
 
-def select_input_columns(df): return df[input_columns_classify]
-def select_output_columns(df): return df[output_columns_classify]
-def select_output_columns_as_row(df): return df[output_columns_classify[0]].ravel()
+
+def select_input_columns_regress(df): return df[input_columns_regress]
+def select_output_columns_as_row_regress(df): return df[output_columns_regress[0]].ravel()
+
+def select_input_columns_classify(df): return df[input_columns_classify]
+def select_output_columns_as_row_classify(df): return df[output_columns_classify[0]].ravel()
 
 def split_n_save(tr = .6, ts =.2,name='original_train.csv'):
     df = pd.read_csv('./data/'+name)
@@ -71,10 +74,50 @@ def split_df(df,p):
     test = df[train_mask].reset_index(drop=True)
     return train,test
 
-#######################################################################################################################
+def pd_vstack(dfs):
+    big_list = None
+    for i in dfs:
+        if big_list is None: big_list = i
+        else:big_list = big_list.append(i, ignore_index=True)
+    big_list.reset_index(drop=True, inplace=True)
+    return big_list
+
+def remove_label_false(df): return df[df['label'] > .5]
+def remove_label_true(df): return df[df['label'] < .5]
+
+########################################################################################################################
+input_columns_regress = [
+
+    #'fare',
+    'meter_waiting_fare',
+    #'meter_waiting',
+    #'meter_waiting_till_pickup',
+    'distance_multiplied',
+    'duration',
+    'pick_lat',
+    'pick_lon',
+    # 'drop_lat',
+    # 'drop_lon',
+    # 'avg_lat',
+    # 'avg_lon',
+    'additional_fare',
+    'time',
+
+#    'log_fare',
+#    'log_duration',
+
+#    'predicted_fare',
+#    'predicted_fare_error_perc',
+#    'predicted_fare_error_diff'
+]
+
+output_columns_regress = ['fare']
+
+######################################
 input_columns_classify = [
 
     'fare',
+#    'pfare',
     'meter_waiting_fare',
     #'meter_waiting',
     #'meter_waiting_till_pickup',
@@ -104,7 +147,8 @@ output_columns_classify = ['label']
 # ts_df = load_test()
 
 
-tr_df,ts_df = split_df(load_original_train(),.1)
+tr, ts = split_df(load_original_train(), .1)
+oo = load_original_test()
 ########################################################################################################################
 # def xgb_f1(y, t, threshold=0.5):
 #     t = t.get_label()
@@ -122,19 +166,30 @@ tr_df,ts_df = split_df(load_original_train(),.1)
 #g=f1_score(select_output_columns_as_row(ts),mod.predict(select_input_columns(ts)))
 
 ########################################################################################################################
+def r():
+    clas = CatBoostClassifier(iterations=3000, eval_metric='F1')
+    reg = CatBoostRegressor(iterations=29, eval_metric='MAE')
+    reg.fit(
 
-model = CatBoostClassifier(iterations=5000,eval_metric='F1')
+                    select_input_columns_regress(pd_vstack([tr, ts,oo])),
+                    select_output_columns_as_row_regress(pd_vstack([tr, ts,oo])),
 
-tr_in,tr_out = select_input_columns(tr_df), select_output_columns_as_row(tr_df)
+            eval_set=[((select_input_columns_regress(remove_label_true(pd_vstack([tr, ts])))),
+                      select_output_columns_as_row_regress(remove_label_true(pd_vstack([tr, ts])))),
+                      ((select_input_columns_regress(remove_label_false(pd_vstack([tr, ts])))),
+                       select_output_columns_as_row_regress(remove_label_false(pd_vstack([tr, ts])))),
+                      ],
+            use_best_model=True, verbose=True)
+    ts['pfare'] = pd.Series(reg.predict(select_input_columns_regress(ts)))
+    tr['pfare'] = pd.Series(reg.predict(select_input_columns_regress(tr)))
+    oo['pfare'] = pd.Series(reg.predict(select_input_columns_regress(oo)))
+    clas.fit(select_input_columns_classify(tr), select_output_columns_as_row_classify(tr), eval_set=(select_input_columns_classify(ts), select_output_columns_as_row_classify(ts)), use_best_model=True, verbose=True)
 
-mask = np.random.rand(len(ts_df))<1.5
-ts_in1, ts_out1 = select_input_columns(ts_df[mask]), select_output_columns_as_row(ts_df[mask]) # validation
-#ts_in2, ts_out2 = select_input_columns(ts_df[~mask]), select_output_columns_as_row(ts_df[~mask]) # test
 
-model.fit(tr_in, tr_out, eval_set=(ts_in1, ts_out1), use_best_model=True, verbose=True)
+    ts['plabel'] = pd.Series(clas.predict(select_input_columns_classify(ts)))
 
-original_test = load_original_test()
-original_test['prediction']=pd.Series(model.predict(select_input_columns(original_test)))
-fname = str(int(time.time() * 1000))+".csv"
-original_test[['tripid','prediction']].to_csv("./results/"+fname)
-print(fname)
+    oo['prediction']=pd.Series(clas.predict(select_input_columns_classify(oo)))
+    fname = str(clas.best_score_['validation']['F1'])+"_"+str(int(time.time() * 1000))+".csv"
+    oo[['tripid','prediction']].to_csv("./results/"+fname,index=False)
+
+    print(fname)

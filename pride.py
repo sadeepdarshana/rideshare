@@ -183,6 +183,7 @@ def pd_vstack(dfs):
     for i in dfs:
         if big_list is None: big_list = i
         else:big_list = big_list.append(i, ignore_index=True)
+    big_list.reset_index(drop=True, inplace=True)
     return big_list
 
 def xc(df):
