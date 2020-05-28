@@ -70,17 +70,19 @@ output_columns_regress = [
 
 input_columns_classify = [
                  'fare',
-                 'predicted_fare',
-                # 'log_fare',
+              #   'predicted_fare',
+               #  'log_fare',
                  'meter_waiting_fare',
-                 'meter_waiting',
-                 'meter_waiting_till_pickup',
+  #               'meter_waiting',
+              #   'meter_waiting_till_pickup',
                  'distance_multiplied',
                  'duration',
-                 'pick_lat',
-                 'pick_lon',
-                 'drop_lat',
-                 'drop_lon',
+  #               'pick_lat',
+  #               'pick_lon',
+                 # 'drop_lat',
+                 # 'drop_lon',
+                 # 'avg_lat',
+                 # 'avg_lon',
                  'additional_fare',
                #  'log_duration',
               #   'time',
@@ -154,7 +156,7 @@ def split_n_save(tr = .6, ts =.2,name='original_train.csv'):
     df = pd.read_csv('./data/'+name)
     basernd = np.random.rand(len(df))
 
-    train_mask = basernd < tr
+    train_mask = basernd <= tr
     test_mask = basernd > (1- ts)
     ops_mask = (basernd >tr) & (basernd < (1- ts))
 
@@ -166,9 +168,7 @@ def split_n_save(tr = .6, ts =.2,name='original_train.csv'):
     test.to_csv('./data/test.csv')
     ops.to_csv('./data/ops.csv')
 
-def get_minutes_from_mid_night(st):
-    d = parser.parse(st)
-    return d.time().hour * 60 + d.time().minute
+def get_minutes_from_mid_night(st): return parser.parse(st).time().hour * 60 + parser.parse(st).time().minute
 
 def select_input_columns(df): return df[input_columns]
 
@@ -202,6 +202,8 @@ def get_processed_df(name):
     add_log_fare(df)
     add_log_duration(df)
     add_log_distance(df)
+    add_avg_lat(df)
+    add_avg_lon(df)
     add_meter_reading_fare_capped(df)
     add_distance_multiplied(df)
     add_time(df)
@@ -232,6 +234,10 @@ def add_distance(df): df['distance'] = ((df['pick_lat']- df['drop_lat'])**2 + (d
 def add_log_duration(df): df['log_duration'] = df['duration'].map(lambda x : math.log(max(1,x)))
 
 def add_log_fare(df): df['log_fare'] = df['fare'].map(lambda x : math.log(max(1,x)))
+
+def add_avg_lat(df): df['avg_lat'] = (df['pick_lat']+df['drop_lat'])/2
+
+def add_avg_lon(df): df['avg_lon'] = (df['pick_lon']+df['drop_lon'])/2
 
 def add_log_distance(df): df['log_distance'] = df['distance'].map(lambda x : math.log(max(0.0000001,x)))
 
@@ -369,8 +375,8 @@ def all(regressor_model = None, classifier_model = None,m1=-1,M1=300000000,m2=-1
     return test_df,m
 
 def splitrun():
-    split_n_save(.99, .01)
-    g=all(CatBoostRegressor(iterations=3000), CatBoostClassifier(iterations=10000,eval_metric='F1'),m1=-1,M1=26444444404,m2=-1,M2=233333333360)
+    #split_n_save(.99, .01)
+    g=all(CatBoostRegressor(iterations=30), CatBoostClassifier(iterations=10000,eval_metric='F1'),m1=-1,M1=26444444404,m2=-1,M2=233333333360)
     print(g[1])
 
 splitrun()
