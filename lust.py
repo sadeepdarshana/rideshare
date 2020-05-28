@@ -1,8 +1,11 @@
 import math
+import os
+
 import pandas as pd
 from catboost import CatBoostClassifier, CatBoostRegressor
 from dateutil import parser
 import numpy as np
+import threading
 import time
 import xgboost as xgb
 from sklearn.metrics import f1_score
@@ -147,7 +150,7 @@ output_columns_classify = ['label']
 # ts_df = load_test()
 
 
-tr, ts = split_df(load_original_train(), .1)
+tr, ts = split_df(load_original_train(), .35)
 oo = load_original_test()
 ########################################################################################################################
 # def xgb_f1(y, t, threshold=0.5):
@@ -167,7 +170,9 @@ oo = load_original_test()
 
 ########################################################################################################################
 def r():
-    clas = CatBoostClassifier(iterations=3000, eval_metric='F1')
+    pfare = np.random.random()<.5
+    global input_columns_classify
+    clas = CatBoostClassifier(iterations=3700, eval_metric='F1')
     reg = CatBoostRegressor(iterations=29, eval_metric='MAE')
     reg.fit(
 
@@ -183,13 +188,38 @@ def r():
     ts['pfare'] = pd.Series(reg.predict(select_input_columns_regress(ts)))
     tr['pfare'] = pd.Series(reg.predict(select_input_columns_regress(tr)))
     oo['pfare'] = pd.Series(reg.predict(select_input_columns_regress(oo)))
+
+    input_columns_classify = list(filter(('pfare').__ne__, input_columns_classify))
+    if pfare: input_columns_classify += ['pfare']
+    ts_cl_in = select_input_columns_classify(ts)
+    oo_cl_in = select_input_columns_classify(oo)
+    print(input_columns_classify)
     clas.fit(select_input_columns_classify(tr), select_output_columns_as_row_classify(tr), eval_set=(select_input_columns_classify(ts), select_output_columns_as_row_classify(ts)), use_best_model=True, verbose=True)
 
 
-    ts['plabel'] = pd.Series(clas.predict(select_input_columns_classify(ts)))
-
-    oo['prediction']=pd.Series(clas.predict(select_input_columns_classify(oo)))
-    fname = str(clas.best_score_['validation']['F1'])+"_"+str(int(time.time() * 1000))+".csv"
+    ts['plabel'] = pd.Series(clas.predict(ts_cl_in))
+    oo['prediction']=pd.Series(clas.predict(oo_cl_in))
+    fname = str('pfare' in input_columns_classify)+"_"+str(clas.best_score_['validation']['F1'])+"_"+str(int(time.time() * 1000))+str(np.random.randint(0,9))+".csv"
     oo[['tripid','prediction']].to_csv("./results/"+fname,index=False)
 
     print(fname)
+
+# id = str(int(time.time() * 1000))
+# def par():
+#     global id
+#
+#     id = str(int(time.time() * 1000))
+#
+#     if not os.path.exists("./results/"+str(id)):  os.makedirs("./results/"+str(id))
+#
+#     tc = 5
+#     while True:
+#         tl=[]
+#         for i in range(tc):  tl.append(threading.Thread(target=r))
+#         for i in range(tc):  tl[i].start()
+#         for i in range(tc):  tl[i].join()
+# 
+#
+# par()
+
+r()
